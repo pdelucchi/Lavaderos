@@ -1,0 +1,71 @@
+import lavadero.*
+
+describe "Tests de Lavadero" {
+	
+	var lavaderoAutomatico = new LavaderoAutomatico(10, 150)
+	var auto = new Vehiculo()
+	var gaviota1 = new Gaviota(3)
+	var gaviota2 = new Gaviota(6)
+	var cotorra = new Ave()
+	var loroBarranquero = new Ave()
+	var paloma = new Paloma(100)
+	var palomaGorda = new Paloma(300)
+	var smallLav = new LavaderoArtesanal(3,50)
+	var buenosAires = new Lugar([smallLav,lavaderoAutomatico])
+	var formacionEnV = new FormacionEnV()
+	var bandada1 = new Bandada([gaviota1,gaviota2,paloma,cotorra,loroBarranquero,loroBarranquero],formacionEnV)
+	var lluviaDeCeniza = new LluviaDeCenizaVolcanica(100)
+	fixture {
+		buenosAires.recibirVehiculo(auto)
+	}
+	
+
+	/*test "Auto se ensucia y se lava" {
+		assert.equals(0, unAuto.nivelDeSuciedad())
+		unAuto.ensuciarse(20)
+		assert.equals(20, unAuto.nivelDeSuciedad())
+		
+		lavaderoAutomatico.lavar(unAuto)
+		assert.equals(0, unAuto.nivelDeSuciedad())
+	}
+
+	test "Lavadero hace presupuesto" {
+		assert.equals(10, lavaderoAutomatico.tiempoLavado(unAuto))
+		assert.equals(150, lavaderoAutomatico.precioLavado(unAuto))
+	}*/
+	
+	test "Bandada ensucia sobre auto"{
+		bandada1.ensuciar(auto)
+		assert.equals(87,auto.nivelDeSuciedad())
+	}
+	test "Cae sobre buenos Aires Ceniza Volcanica"{
+		lluviaDeCeniza.caerSobre(buenosAires)
+		assert.equals(100,auto.nivelDeSuciedad())
+	}
+	test "Paloma Gorda pasa por encima del mismo auto"{
+		bandada1.ensuciar(auto)
+		lluviaDeCeniza.caerSobre(buenosAires)
+		palomaGorda.ensuciar(auto)
+		assert.equals(277,auto.nivelDeSuciedad())
+	}
+	test "Lavar en smallLav"{
+		bandada1.ensuciar(auto)
+		lluviaDeCeniza.caerSobre(buenosAires)
+		palomaGorda.ensuciar(auto)
+		assert.equals(8310,smallLav.precioLavado(auto))
+	}
+	test "Cambiar a W y pasar por el auto"{
+		bandada1.cambiarFormacion(formacionEnW)
+		bandada1.ensuciar(auto)
+			assert.equals(174,auto.nivelDeSuciedad())
+	}
+	test "Ir Al Lavadero mas barato dentro de la localidad"{
+		assert.equals(smallLav,buenosAires.lavaderoMasBaratoPara(auto))
+	}
+	test "Ir Al Lavadero mas barato con el auto sucio dentro de la localidad"{
+		bandada1.ensuciar(auto)
+		lluviaDeCeniza.caerSobre(buenosAires)
+		palomaGorda.ensuciar(auto)
+		assert.equals(lavaderoAutomatico,buenosAires.lavaderoMasBaratoPara(auto))
+	}
+}
